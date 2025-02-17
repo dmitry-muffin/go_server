@@ -6,9 +6,9 @@ import (
 )
 
 type User struct {
-	Id       int
-	Name     string
-	Card_pin int
+	Id      int
+	Name    string
+	CardPin int
 }
 
 type Storage interface {
