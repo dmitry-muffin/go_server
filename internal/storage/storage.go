@@ -6,16 +6,16 @@ import (
 )
 
 type User struct {
-	id       int
-	name     string
-	card_pin int
+	Id       int
+	Name     string
+	Card_pin int
 }
 
 type Storage interface {
 	addUser(user User) error
-	getUser(id int) (User, error)
-	updateUser(id int, updated User) error
-	deleteUser(id int) error
+	getUser(Id int) (User, error)
+	updateUser(Id int, updated User) error
+	deleteUser(Id int) error
 }
 
 type ReadyStorage struct {
@@ -29,23 +29,23 @@ func CreateStorage() *ReadyStorage {
 	}
 }
 
-func (s *ReadyStorage) addUser(user User) error {
+func (s *ReadyStorage) AddUser(user User) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
-	if _, ok := s.users[user.id]; ok {
+	if _, ok := s.users[user.Id]; ok {
 		return errors.New("user already exists")
 	}
 
-	s.users[user.id] = user
+	s.users[user.Id] = user
 	return nil
 }
 
-func (s *ReadyStorage) getUser(id int) (User, error) {
+func (s *ReadyStorage) GetUser(Id int) (User, error) {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 
-	user, ok := s.users[id]
+	user, ok := s.users[Id]
 	if !ok {
 		return User{}, errors.New("item not found")
 	}
@@ -54,25 +54,25 @@ func (s *ReadyStorage) getUser(id int) (User, error) {
 
 }
 
-func (s *ReadyStorage) deleteUser(id int) error {
+func (s *ReadyStorage) deleteUser(Id int) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
-	if _, ok := s.users[id]; !ok {
+	if _, ok := s.users[Id]; !ok {
 		return errors.New("item not found")
 	}
-	delete(s.users, id)
+	delete(s.users, Id)
 	return nil
 }
 
-func (s *ReadyStorage) updateUser(id int, updated User) error {
+func (s *ReadyStorage) updateUser(Id int, updated User) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
-	if _, ok := s.users[id]; !ok {
+	if _, ok := s.users[Id]; !ok {
 		return errors.New("item not found")
 	}
 
-	s.users[id] = updated
+	s.users[Id] = updated
 	return nil
 }
