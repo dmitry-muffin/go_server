@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"go_server/internal/config"
 	"go_server/internal/storage"
 	"log/slog"
@@ -14,11 +16,11 @@ var (
 
 func main() {
 
-	//TODO init config
+	// init config
 	cfg := config.MustLoad()
 	fmt.Println(cfg)
 
-	//todo init logger
+	// init logger
 	log := loggerSetup(cfg.Env)
 
 	// log.With(slog.String("env", cfg.Env))
@@ -26,9 +28,16 @@ func main() {
 	log.Info("starting server", slog.String("env", cfg.Env))
 	log.Debug("debugging working")
 
-	//todo init storage
+	// init storage
 
-	//todo init router
+	// init router
+	router := chi.NewRouter()
+
+	//middleware
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.URLFormat)
 
 	//todo run server
 
