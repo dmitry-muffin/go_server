@@ -2,23 +2,22 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi"
-	"go_server/internal/config"
-	"go_server/internal/http-server/handlers"
-	"go_server/internal/storage"
 	"log/slog"
 	"net/http"
 	"os"
+
+	"github.com/go-chi/chi"
+
+	"go_server/internal/config"
+	"go_server/internal/http-server/handlers"
+	"go_server/internal/storage"
 )
 
 // Invoke-WebRequest -Uri http://localhost:8080/users -Method POST -Headers $headers -Body '{"Id":1,"Name":"Alice","Card_pin":1234}'
 // curl "http://localhost:8080/users?id=1"
 
-var (
-	mapStore = storage.CreateStorage()
-)
-
 func main() {
+	mapStore := storage.CreateStorage()
 
 	// init config
 	cfg := config.MustLoad()
@@ -37,9 +36,9 @@ func main() {
 	// init router
 	router := chi.NewRouter()
 
-	h := handlers.NewHandler(mapStore)
+	h := handlers.NewHandler(mapStore, log)
 
-	router.Post("/users", h.AddUserHandler(log))
+	router.Post("/users", h.AddUserHandler)
 	router.Get("/users", h.GetUserHandler)
 
 	//todo run server
