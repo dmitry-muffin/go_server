@@ -22,6 +22,7 @@ type ReadyStorage struct {
 func CreateStorage() *ReadyStorage {
 	return &ReadyStorage{
 		users: make(map[int]domain.User),
+		mutex: &sync.RWMutex{},
 	}
 }
 
